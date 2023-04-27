@@ -14,7 +14,7 @@ const ContactsList = () => {
   const dispatch = useDispatch();
   const currentFilter = useSelector(getFilter);
   const visibleContacts = contacts.filter(el =>
-    el.name.toLowerCase().includes(currentFilter.toLowerCase().trim())
+    el.name.toLowerCase().includes(currentFilter.toLowerCase())
   );
 // console.log('visibleContacts - ', visibleContacts);
   return (
