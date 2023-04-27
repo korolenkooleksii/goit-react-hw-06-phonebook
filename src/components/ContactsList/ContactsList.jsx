@@ -16,7 +16,7 @@ const ContactsList = () => {
   const visibleContacts = contacts.filter(el =>
     el.name.toLowerCase().includes(currentFilter.toLowerCase().trim())
   );
-
+// console.log('visibleContacts - ', visibleContacts);
   return (
     <ListContacts>
       {visibleContacts.map(({ name, number, id }) => (
