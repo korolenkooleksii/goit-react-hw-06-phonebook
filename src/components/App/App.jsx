@@ -1,62 +1,29 @@
-import { nanoid } from 'nanoid';
-import { useState } from 'react';
-import useLocalStorage from 'hooks/useLocalStorage';
-import { Container, TitleForm, TitleContacts, Info } from './App.styled';
+import { useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+
 import ContactForm from '../ContactForm/ContactForm';
 import ContactsList from '../ContactsList/ContactsList';
 import Filter from '../Filter/Filter';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-const KEY_CONTACTS = 'contacts';
+import { ToastContainer } from 'react-toastify';
+import { Container, TitleForm, TitleContacts, Info } from './App.styled';
 
 const App = () => {
-  const [contacts, setContacts] = useLocalStorage(KEY_CONTACTS, []);
-  const [filter, setFilter] = useState('');
-
-  const updateState = (userName, userNumber) => {
-    if (contacts.some(el => el.name === userName)) {
-      toast.warn(`${userName} is already in contacts.`, { theme: 'colored' });
-    } else {
-      setContacts(prevState => [
-        { name: userName, number: userNumber, id: nanoid() },
-        ...prevState,
-      ]);
-    }
-  };
-
-  const updateFilter = date => {
-    setFilter(date);
-  };
-
-  const filterByName = () => {
-    if (filter) {
-      const visibleFriends = contacts.filter(el =>
-        el.name.toLowerCase().includes(filter.trim())
-      );
-      return visibleFriends;
-    } else {
-      return contacts;
-    }
-  };
-
-  const deleteContact = id => {
-    setContacts(contacts.filter(contact => contact.id !== id));
-  };
+  const contacts = useSelector(getContacts);
 
   return (
     <Container>
       <TitleForm>Phonebook</TitleForm>
-      <ContactForm updateState={updateState} />
-      {(!contacts.length) ? (
-        <Info>No contacts.</Info>
-      ) : (
+      <ContactForm />
+
+      {!contacts.length && <Info>No contacts.</Info>}
+      {contacts.length && (
         <>
           <TitleContacts>Contacts</TitleContacts>
-          <Filter filter={filter} updateFilter={updateFilter} />
+          <Filter />
         </>
       )}
-      <ContactsList contacts={filterByName()} deleteContact={deleteContact} />
+      <ContactsList />
       <ToastContainer />
     </Container>
   );

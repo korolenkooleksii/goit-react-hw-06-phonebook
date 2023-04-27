@@ -1,33 +1,27 @@
-import { nanoid } from 'nanoid';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFilter } from 'redux/selectors';
+import { filter } from 'redux/contactsSlice';
+
 import { Wrapper, LabelForm, InputForm } from './Filter.styled';
-import PropTypes from 'prop-types';
 
-const Filter = ({ filter, updateFilter }) => {
-  const idForm = nanoid();
-
+const Filter = () => {
+  const dispatch = useDispatch();
+  const currentFilter = useSelector(getFilter);
   return (
     <Wrapper>
-      <LabelForm htmlFor={idForm}>
+      <LabelForm>
         Find contact by name
         <InputForm
-          id={idForm}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          onChange={e => {
-            updateFilter(e.currentTarget.value.toLowerCase());
-          }}
-          value={filter}
+          onChange={e => dispatch(filter(e.currentTarget.value))}
+          value={currentFilter}
         />
       </LabelForm>
     </Wrapper>
   );
-};
-
-Filter.propTypes = {
-  state: PropTypes.string,
-  updateFilter: PropTypes.func,
 };
 
 export default Filter;

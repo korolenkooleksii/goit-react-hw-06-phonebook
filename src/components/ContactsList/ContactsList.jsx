@@ -1,22 +1,32 @@
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts, getFilter } from 'redux/selectors';
+import { removeContact } from 'redux/contactsSlice';
+import { TbPoint } from 'react-icons/tb';
+
 import {
   ItemContacts,
   ListContacts,
   ButtonDelete,
 } from './ContactsList.styled';
-import { TbPoint } from 'react-icons/tb';
-import PropTypes from 'prop-types';
 
-const ContactsList = ({ contacts, deleteContact }) => {
+const ContactsList = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const currentFilter = useSelector(getFilter);
+  const visibleContacts = contacts.filter(el =>
+    el.name.toLowerCase().includes(currentFilter.toLowerCase().trim())
+  );
+
   return (
     <ListContacts>
-      {contacts.map(({ name, number, id }) => (
+      {visibleContacts.map(({ name, number, id }) => (
         <ItemContacts key={id}>
           <TbPoint />
           {name}: {number}
           <ButtonDelete
             type="button"
             onClick={() => {
-              deleteContact(id);
+              dispatch(removeContact(id));
             }}
           >
             Delete
@@ -25,14 +35,6 @@ const ContactsList = ({ contacts, deleteContact }) => {
       ))}
     </ListContacts>
   );
-};
-
-ContactsList.propTypes = {
-  state: PropTypes.array,
-  name: PropTypes.string,
-  number: PropTypes.string,
-  id: PropTypes.string,
-  deleteContact: PropTypes.func,
 };
 
 export default ContactsList;
