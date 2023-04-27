@@ -17,7 +17,8 @@ const App = () => {
       <ContactForm />
 
       {!contacts.length && <Info>No contacts.</Info>}
-      {contacts.length && (
+
+      {contacts.length > 0 && (
         <>
           <TitleContacts>Contacts</TitleContacts>
           <Filter />
